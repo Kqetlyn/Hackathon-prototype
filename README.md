@@ -148,8 +148,9 @@ Say these before a judge finds them.
 ## Layout
 
 ```
+run.bat             Windows launcher, double-click or `run.bat fresh`
 run_pipeline.py     end to end, writes outputs/
-app.py              Streamlit dashboard
+app.py              Streamlit dashboard, self-relaunching
 src/
   generate_data.py  synthetic fleet — replace on hackathon day
   validate.py       stage 1, sensor triage
