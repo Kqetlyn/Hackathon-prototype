@@ -1,0 +1,38 @@
+# Channel mapping. LTA's Rail Reliability Taskforce noted in Feb 2026 that
+# condition monitoring across the network was installed at different times by
+# different manufacturers and measures different parameters, and that a baseline
+# standard is being introduced to harmonise it.
+#
+# So do not hardcode column names. Map whatever the source calls a signal onto
+# the canonical channel the pipeline understands. Adding a new line, vendor or
+# subsystem should be an edit here, not a code change.
+
+door:
+  channels:
+    door_close_time_s:
+      aliases: [close_time, doorCloseTime, DR_CLOSE_T, close_duration_sec]
+      threshold: 3.30
+      role: primary
+    door_motor_current_a:
+      aliases: [motor_current, DR_I_PEAK, current_peak_amp]
+      role: secondary
+    door_air_pressure_bar:
+      aliases: [air_pressure, DR_P_BAR, pneumatic_pressure]
+      role: secondary
+  usage_unit: cycles
+  pm_interval_days: 90
+
+bogie:
+  channels:
+    bogie_axlebox_temp_rise_c:
+      aliases: [axlebox_temp, AXB_T_RISE, bearing_temp_delta]
+      threshold: 25.0
+      role: primary
+    bogie_vibration_rms_g:
+      aliases: [vibration_rms, BG_VIB_G, accel_rms]
+      role: secondary
+    bogie_axle_load_t:
+      aliases: [axle_load, BG_LOAD_T]
+      role: secondary
+  usage_unit: km
+  pm_interval_days: 120

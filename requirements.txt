@@ -1,0 +1,11 @@
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.3
+streamlit>=1.30
+
+# Optional. detect.py adds XGBoost to the benchmark automatically if present.
+xgboost>=2.0
+
+# Also worth trying — topped a published railway sensor anomaly benchmark.
+# Add it to the `supervised` dict in src/detect.py, see docs/MODELS.md.
+# catboost>=1.2
