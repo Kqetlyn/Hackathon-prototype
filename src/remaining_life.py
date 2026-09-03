@@ -148,6 +148,15 @@ def estimate(telemetry: pd.DataFrame, work_orders: pd.DataFrame) -> pd.DataFrame
         cond, slope = condition_estimate(g, system)
         rel = reliability_estimate(g, system, char_life)
         lo, hi = min(cond, rel), max(cond, rel)
+
+        # MAX_HORIZON is a censoring cap, not a prediction. When one method hits
+        # it, that method is saying "no limit in sight within a year", which is
+        # not a disagreement with the other one — it simply has nothing to add.
+        # Treating it as a real upper bound produced ranges like "19 to 365
+        # days", which is not uncertainty, it is a rendering bug.
+        censored = bool(hi >= MAX_HORIZON)
+        agrees = bool(censored or hi - lo <= max(3, 0.2 * hi))
+
         # peer-relative duty, so "worked hard" reads differently from "degrading"
         rows.append(
             dict(
@@ -158,7 +167,9 @@ def estimate(telemetry: pd.DataFrame, work_orders: pd.DataFrame) -> pd.DataFrame
                 reliability_days=round(rel),
                 remaining_lo=round(lo),
                 remaining_hi=round(hi),
-                agrees=bool(hi - lo <= max(3, 0.2 * hi)),
+                agrees=agrees,
+                censored=censored,
+                beyond_horizon=bool(lo >= MAX_HORIZON),
                 trend_per_day=slope,
                 usage_since_replacement=round(usage_since_replacement(g)),
                 life_used_pct=round(100 * usage_since_replacement(g) / char_life.get(system, FALLBACK_LIFE[system])),
