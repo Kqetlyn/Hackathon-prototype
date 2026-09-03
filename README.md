@@ -15,27 +15,79 @@ to do any work at all.
 
 ## Quick start
 
-**Windows** — double-click `run.bat`, or from a terminal:
+The dashboard opens at <http://localhost:8501>. Ctrl+C in the terminal stops it.
 
-```
-run.bat            first run sets up the venv and trains, then opens the dashboard
-run.bat fresh      retrain from scratch
+### First time
+
+**Windows** — double-click `run.bat`, or in PowerShell:
+
+```powershell
+cd $env:USERPROFILE\Downloads\nebula-x-predictive-maintenance
+.\run.bat
 ```
 
-**Any platform**, once dependencies are installed:
+That creates the virtual environment, installs dependencies, trains the models
+(~95s) and opens the dashboard. Nothing else to do.
+
+**macOS and Linux:**
 
 ```bash
+cd nebula-x-predictive-maintenance
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-python app.py      runs the pipeline if needed, then opens the dashboard
+python app.py
 ```
 
-`python app.py` works because the app relaunches itself under Streamlit when it
-notices it wasn't started that way. `streamlit run app.py` still works too.
+### Every time after
 
-To retrain without opening the dashboard: `python run_pipeline.py` (~95s).
+**Windows:**
 
-The pipeline generates its own synthetic fleet, so the whole thing runs before
-you have the real dataset.
+```powershell
+cd $env:USERPROFILE\Downloads\nebula-x-predictive-maintenance
+.\run.bat
+```
+
+**macOS and Linux:**
+
+```bash
+cd nebula-x-predictive-maintenance
+source .venv/bin/activate
+streamlit run app.py
+```
+
+Subsequent launches take a couple of seconds — the pipeline is skipped when
+`outputs/` already exists.
+
+### Retraining
+
+Only needed after you change the code or swap the data.
+
+```powershell
+.\run.bat fresh                 # Windows: retrain, then open the dashboard
+```
+
+```bash
+python run_pipeline.py          # any platform: retrain only, ~95s, no dashboard
+```
+
+Editing `app.py` alone needs no retrain — Streamlit hot-reloads on save.
+
+### Which command
+
+| Command | Notes |
+|---|---|
+| `run.bat` | Windows. Handles setup, works on a fresh clone with nothing installed |
+| `streamlit run app.py` | Most direct. Needs the venv active |
+| `python app.py` | Relaunches itself under Streamlit. Fractionally slower, same result |
+
+The pipeline generates its own synthetic fleet, so all of this runs before you
+have the real dataset.
+
+**If `python` is not recognised** on Windows, install it from python.org with
+"Add Python to PATH" ticked. **If PowerShell blocks the venv activation script**,
+run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` first — or just
+use `run.bat`, which sidesteps activation entirely.
 
 ---
 
