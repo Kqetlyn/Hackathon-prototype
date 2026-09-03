@@ -15,14 +15,27 @@ to do any work at all.
 
 ## Quick start
 
-```bash
-pip install -r requirements.txt
-python run_pipeline.py        # ~95s, writes outputs/
-streamlit run app.py
+**Windows** — double-click `run.bat`, or from a terminal:
+
+```
+run.bat            first run sets up the venv and trains, then opens the dashboard
+run.bat fresh      retrain from scratch
 ```
 
-No arguments, no configuration needed. The pipeline generates its own synthetic
-fleet so the whole thing runs before you have the real dataset.
+**Any platform**, once dependencies are installed:
+
+```bash
+pip install -r requirements.txt
+python app.py      runs the pipeline if needed, then opens the dashboard
+```
+
+`python app.py` works because the app relaunches itself under Streamlit when it
+notices it wasn't started that way. `streamlit run app.py` still works too.
+
+To retrain without opening the dashboard: `python run_pipeline.py` (~95s).
+
+The pipeline generates its own synthetic fleet, so the whole thing runs before
+you have the real dataset.
 
 ---
 

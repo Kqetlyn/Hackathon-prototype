@@ -1,15 +1,44 @@
-"""Streamlit dashboard. Run `python run_pipeline.py` first, then:
+"""Streamlit dashboard.
 
-    streamlit run app.py
+    python app.py            starts everything
+    streamlit run app.py     also works, if you prefer
+
+Streamlit normally refuses to run under a plain `python app.py` because it needs
+its own server. The shim below spots that case and relaunches itself correctly,
+so either command works.
 """
 from __future__ import annotations
 
 import pathlib
+import subprocess
+import sys
+
+HERE = pathlib.Path(__file__).resolve().parent
+OUT = HERE / "outputs"
+
+
+def _under_streamlit() -> bool:
+    try:
+        from streamlit.runtime import exists
+
+        return exists()
+    except Exception:
+        return False
+
+
+if not _under_streamlit():
+    if not (OUT / "decisions.csv").exists():
+        print("No outputs yet — running the pipeline first (about 95 seconds).\n")
+        subprocess.run([sys.executable, str(HERE / "run_pipeline.py")], check=True)
+    print("\nStarting the dashboard. Press Ctrl+C to stop.\n")
+    sys.exit(
+        subprocess.run(
+            [sys.executable, "-m", "streamlit", "run", str(HERE / "app.py")]
+        ).returncode
+    )
 
 import pandas as pd
 import streamlit as st
-
-OUT = pathlib.Path(__file__).resolve().parent / "outputs"
 
 st.set_page_config(page_title="Rolling stock maintenance decisions", layout="wide")
 
