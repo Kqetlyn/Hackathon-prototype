@@ -1,7 +1,7 @@
 # Rolling stock maintenance decision tool
 
 NEBULA X hackathon · Problem statement 3, predictive fault detection · LTA Rail
-Digitalisation & Guild, 18–20 September 2026.
+Digitalisation & Guild
 
 Door and bogie telemetry goes in. For each asset, what comes out is how long it
 has left, whether it can wait for the next scheduled maintenance, and which
